@@ -1,0 +1,27 @@
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Build
+lib/
+*.tgz
+
+# Android
+android/build/
+android/.gradle/
+android/local.properties
+*.iml
+.idea/
+
+# iOS
+ios/build/
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+*.swp
+*.swo
+*~
