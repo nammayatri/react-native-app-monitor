@@ -1,0 +1,13 @@
+**/*/build
+**/*/gradle
+**/*/.gradle
+**/*/gradlew
+**/*/gradlew.bat
+android/local.properties
+android/.idea
+android/.gradle
+android/build
+android/app/build
+*.tgz
+node_modules
+.DS_Store
