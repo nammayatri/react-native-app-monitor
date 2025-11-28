@@ -6,7 +6,9 @@ module.exports = {
         packageImportPath: 'import com.movingtech.appmonitor.AppMonitorPackage;',
         packageInstance: 'new AppMonitorPackage()',
       },
-      ios: null,
+      ios: {
+        podspecPath: './react-native-app-monitor.podspec',
+      },
     },
   },
 };

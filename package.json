@@ -11,6 +11,8 @@
     "src",
     "lib",
     "android",
+    "ios",
+    "react-native-app-monitor.podspec",
     "!android/build",
     "!**/__tests__",
     "!**/__fixtures__",
@@ -63,6 +65,9 @@
     "jsSrcsDir": "src",
     "android": {
       "javaPackageName": "com.movingtech.appmonitor"
+    },
+    "ios": {
+      "moduleName": "AppMonitorBridge"
     }
   },
   "react-native-builder-bob": {
