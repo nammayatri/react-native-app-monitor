@@ -16,7 +16,6 @@ Pod::Spec.new do |s|
   s.source       = { :git => package["repository"]["url"], :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm,swift}"
-  s.public_header_files = "ios/*.h"
   s.requires_arc = true
   
   # Include the generated codegen files
@@ -24,9 +23,10 @@ Pod::Spec.new do |s|
     "HEADER_SEARCH_PATHS" => "\"$(PODS_ROOT)/Headers/Private/React-Core\" \"$(PODS_TARGET_SRCROOT)/ios\""
   }
 
-  # React Native
+  # React Native - New Architecture support
   s.dependency "React-Core"
   s.dependency "ReactCommon/turbomodule/core"
+  s.dependency "React-RCTFabric" # Required for New Architecture
 
   # AppMonitor iOS SDK - from private spec repo
   s.dependency "AppMonitor", "~> 1.0.0"

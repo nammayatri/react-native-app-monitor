@@ -2,113 +2,63 @@ import Foundation
 import AppMonitor
 import React
 
+// TurboModule implementation for New Architecture
+// RNAppMonitorSpec protocol is defined in RNAppMonitorSpec.h (forward declaration)
+// Codegen will generate the actual protocol and base class at app build time
 @objc(AppMonitorBridge)
-class AppMonitorBridge: NSObject, RCTBridgeModule {
-    
-    // MARK: - React Native Module Setup
-    @objc
-    static func moduleName() -> String {
-        return "AppMonitor"
-    }
+class AppMonitorBridge: NSObject {
     
     // MARK: - Helper to get AppMonitor instance
     private func getAppMonitor() -> AppMonitor {
         return AppMonitor.getInstance()
     }
     
-    // MARK: - React Native Methods
+    // MARK: - TurboModule Methods (matching NativeAppMonitorSpec interface)
+    // These methods will be automatically bridged by React Native codegen
     
-    @objc
-    func addMetric(_ metricName: String?, metricValue: Double) {
-        guard let metricName = metricName else { return }
+    func addMetric(_ metricName: String, metricValue: Double) {
         let monitor = getAppMonitor()
         _ = monitor.addMetric(metricName, value: NSNumber(value: metricValue))
     }
     
-    @objc
-    func addEvent(_ eventType: String?, eventName: String?, eventPayload: NSDictionary?, resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
-        guard let eventType = eventType, let eventName = eventName else {
-            rejecter("INVALID_PARAMS", "eventType and eventName are required", nil)
-            return
-        }
-        
+    func addEvent(_ eventType: String, eventName: String, eventPayload: [String: Any]) {
         let monitor = getAppMonitor()
-        
-        // Convert NSDictionary to [AnyHashable: Any] then to [String: Any]
-        var payload: [String: Any] = [:]
-        if let eventPayload = eventPayload {
-            for (key, value) in eventPayload {
-                if let stringKey = key as? String {
-                    payload[stringKey] = value
-                }
-            }
-        }
-        
-        _ = monitor.addEvent(eventType, eventName: eventName, eventPayload: payload)
-        resolver(true)
+        _ = monitor.addEvent(eventType, eventName: eventName, eventPayload: eventPayload)
     }
     
-    @objc
-    func addLog(_ logLevel: String?, logMessage: String?, tag: String?, labels: NSDictionary?) {
-        let logLevelStr = logLevel ?? ""
-        let logMessageStr = logMessage ?? ""
-        let tagStr = tag ?? ""
-        
+    func addLog(_ logLevel: String, logMessage: String, tag: String, labels: [String: String]) {
         let monitor = getAppMonitor()
-        
-        // Convert NSDictionary to [AnyHashable: Any] then to [String: String]
-        var stringLabels: [String: String] = [:]
-        if let labels = labels {
-            for (key, value) in labels {
-                if let stringKey = key as? String {
-                    if let stringValue = value as? String {
-                        stringLabels[stringKey] = stringValue
-                    } else {
-                        stringLabels[stringKey] = "\(value)"
-                    }
-                }
-            }
-        }
-        
-        if !stringLabels.isEmpty {
-            _ = monitor.addLog(logLevelStr, message: logMessageStr, tag: tagStr, labels: stringLabels)
+        if !labels.isEmpty {
+            _ = monitor.addLog(logLevel, message: logMessage, tag: tag, labels: labels)
         } else {
-            _ = monitor.addLog(logLevelStr, message: logMessageStr, tag: tagStr)
+            _ = monitor.addLog(logLevel, message: logMessage, tag: tag)
         }
     }
     
-    @objc
-    func getSessionId(_ resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
+    func getSessionId() -> String {
         let monitor = getAppMonitor()
-        let sessionId = monitor.getSessionId()
-        resolver(sessionId)
+        return monitor.getSessionId()
     }
     
-    @objc
-    func replaceUserId(_ userId: String, resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
+    func replaceUserId(_ userId: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         let monitor = getAppMonitor()
-        
         monitor.replaceUserId(userId) { success in
             if success {
-                resolver(true)
+                resolve(true)
             } else {
-                rejecter("replace_user_error", "Failed to replace user ID", nil)
+                reject("replace_user_error", "Failed to replace user ID", nil)
             }
         }
     }
     
-    @objc
     func resetUserId() {
         let monitor = getAppMonitor()
-        // Generate a new session which effectively resets the context
         monitor.generateNewSession()
     }
     
-    @objc
-    func generateNewSession(_ resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
+    func generateNewSession() -> String {
         let monitor = getAppMonitor()
         monitor.generateNewSession()
-        let sessionId = monitor.getSessionId()
-        resolver(sessionId)
+        return monitor.getSessionId()
     }
 }
