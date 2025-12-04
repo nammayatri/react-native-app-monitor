@@ -4,6 +4,8 @@
   "description": "Application monitoring tool",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
+  "react-native": "./src/index.tsx",
+  "private": true,
   "exports": {
     ".": {
       "source": "./src/index.tsx",
@@ -34,7 +36,7 @@
   "scripts": {
     "example": "yarn workspace react-native-app-monitor-example",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
-    "prepare": "bob build",
+    "prepare": "NODE_OPTIONS='--experimental-require-module' bob build",
     "typecheck": "tsc",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "release": "release-it --only-version",
@@ -47,14 +49,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nammayatri/react-native-app-monitor/react-native-app-monitor.git"
+    "url": "git+https://github.com/nammayatri/react-native-app-monitor.git"
   },
   "author": "Nammayatri <sdk@nammayatri.in> (https://github.com/nammayatri/react-native-app-monitor)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nammayatri/react-native-app-monitor/react-native-app-monitor/issues"
+    "url": "https://github.com/nammayatri/react-native-app-monitor/issues"
   },
-  "homepage": "https://github.com/nammayatri/react-native-app-monitor/react-native-app-monitor#readme",
+  "homepage": "https://github.com/nammayatri/react-native-app-monitor#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
@@ -88,6 +90,17 @@
     "react": "*",
     "react-native": "*"
   },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": false
+    },
+    "react-native": {
+      "optional": false
+    }
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "workspaces": [
     "example"
   ],
@@ -116,6 +129,9 @@
     "jsSrcsDir": "src",
     "android": {
       "javaPackageName": "com.appmonitor"
+    },
+    "ios": {
+      "moduleName": "AppMonitor"
     }
   },
   "prettier": {
