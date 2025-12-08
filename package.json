@@ -35,8 +35,8 @@
   "scripts": {
     "example": "yarn workspace react-native-app-monitor-example",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
-    "build": "bob build",
-    "prepack": "bob build",
+    "build": "NODE_OPTIONS='--experimental-require-module' bob build",
+    "prepack": "NODE_OPTIONS='--experimental-require-module' bob build",
     "typecheck": "tsc",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "release": "release-it --only-version",
