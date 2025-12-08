@@ -100,10 +100,70 @@ Our pre-commit hooks verify that your commit message matches this format when co
 
 We use [release-it](https://github.com/release-it/release-it) to make it easier to publish new versions. It handles common tasks like bumping version based on semver, creating tags and releases etc.
 
-To publish new versions, run the following:
+#### Prerequisites
+
+1. **npm authentication**: You must be logged in to npm with publish access:
+   ```sh
+   npm login
+   ```
+
+2. **GitHub token** (optional): For automated GitHub releases, set the `GITHUB_TOKEN` environment variable. Without it, release-it will fall back to web-based GitHub release.
+
+#### Release Process
+
+1. **Ensure your working directory is clean**:
+   ```sh
+   git status
+   ```
+
+2. **Run the release command**:
+   ```sh
+   yarn release
+   ```
+
+3. **Follow the prompts**:
+   - Confirm the version bump (patch/minor/major)
+   - Confirm publishing to npm
+   - Confirm creating a GitHub release
+
+#### What happens during release
+
+1. **Version bump**: Updates `version` in `package.json`
+2. **Build**: Runs `bob build` via the `prepack` script to generate the `lib/` folder
+3. **npm publish**: Publishes the package to npm registry (includes `lib/` folder)
+4. **Git commit & tag**: Commits the version bump and creates a git tag
+5. **GitHub release**: Creates a GitHub release with changelog
+
+#### Build Output
+
+The library uses [react-native-builder-bob](https://github.com/callstack/react-native-builder-bob) to compile TypeScript to JavaScript.
+
+- **Source**: `src/` directory (TypeScript)
+- **Output**: `lib/` directory (compiled JavaScript + type definitions)
+- **Note**: `lib/` is in `.gitignore` and not committed to git. It's only included in the npm package.
+
+#### Manual Publishing (if needed)
+
+If you need to publish manually without using release-it:
 
 ```sh
-yarn release
+# 1. Update version in package.json manually
+
+# 2. Build the library
+yarn build
+
+# 3. Verify the build output
+npm pack
+tar -tf react-native-app-monitor-*.tgz
+
+# 4. Publish to npm
+npm publish
+
+# 5. Commit, tag, and push
+git add package.json
+git commit -m "chore: release x.x.x"
+git tag vx.x.x
+git push origin main --tags
 ```
 
 
