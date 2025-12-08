@@ -76,5 +76,5 @@ dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   
   // AppMonitor Android SDK
-  implementation("com.movingtech:appmonitor:1.0.2@aar")
+  implementation("com.movingtech:appmonitor:1.0.3@aar")
 }
