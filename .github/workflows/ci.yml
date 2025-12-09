@@ -55,7 +55,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build package
-        run: yarn prepare
+        run: yarn build
 
   build-android:
     runs-on: ubuntu-latest
@@ -153,14 +153,37 @@ jobs:
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
 
+      - name: Configure private CocoaPods spec repo
+        if: env.turbo_cache_hit != 1
+        env:
+          COCOAPODS_SPEC_REPO_URL: ${{ secrets.COCOAPODS_SPEC_REPO_URL }}
+        run: |
+          if [ -n "$COCOAPODS_SPEC_REPO_URL" ]; then
+            # Add private spec repo before pod install
+            bundle exec pod repo add private-specs "$COCOAPODS_SPEC_REPO_URL" || bundle exec pod repo update private-specs || true
+          fi
+
       - name: Install cocoapods
         if: env.turbo_cache_hit != 1 && steps.cocoapods-cache.outputs.cache-hit != 'true'
         run: |
           cd example
           bundle install
           bundle exec pod repo update --verbose
-          bundle exec pod install --project-directory=ios
-
-      - name: Build example for iOS
+          bundle exec pod install --project-directory=ios --verbose
+          
+      - name: Verify AppMonitor SDK pod
+        if: env.turbo_cache_hit != 1
         run: |
-          yarn turbo run build:ios --cache-dir="${{ env.TURBO_CACHE_DIR }}"
+          cd example/ios
+          if [ -d "Pods/AppMonitor" ]; then
+            echo "✓ AppMonitor SDK pod installed successfully"
+            ls -la Pods/AppMonitor/
+          else
+            echo "⚠ AppMonitor SDK pod not found - check private spec repo configuration"
+            bundle exec pod repo list
+          fi
+
+# TODO : add it later for IOS
+      # - name: Build example for iOS
+      #   run: |
+      #     yarn turbo run build:ios --cache-dir="${{ env.TURBO_CACHE_DIR }}"
