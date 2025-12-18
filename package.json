@@ -1,6 +1,6 @@
 {
   "name": "react-native-app-monitor",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Application monitoring tool",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
