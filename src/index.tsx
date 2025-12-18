@@ -68,6 +68,10 @@ export class AppMonitorAPI {
   static generateNewSession(): string {
     return AppMonitor.generateNewSession();
   }
+
+  static getCurrentConfiguration(): string {
+    return AppMonitor.getCurrentConfiguration();
+  }
 }
 
 export default AppMonitorAPI;
