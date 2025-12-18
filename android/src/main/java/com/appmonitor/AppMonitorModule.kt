@@ -6,7 +6,7 @@ import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.modules.network.NetworkingModule
 import com.movingtech.appmonitor.AppMonitor
-import com.movingtech.appmonitor.interceptor.ApiLatencyInterceptor
+import com.movingtech.appmonitor.ApiLatencyInterceptor
 import java.util.UUID
 
 @ReactModule(name = AppMonitorModule.NAME)
@@ -93,7 +93,7 @@ class AppMonitorModule(reactContext: ReactApplicationContext) :
   }
 
   override fun getCurrentConfiguration(): String {
-    return appMonitor.getCurrentConfiguration()
+    return  appMonitor.getCurrentConfiguration().toString()
   }
 
   private fun readableMapToStringMap(readableMap: ReadableMap?): Map<String, String> {
