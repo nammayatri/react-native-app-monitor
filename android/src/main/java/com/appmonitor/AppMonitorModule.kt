@@ -4,7 +4,9 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.module.annotations.ReactModule
+import com.facebook.react.modules.network.NetworkingModule
 import com.movingtech.appmonitor.AppMonitor
+import com.movingtech.appmonitor.interceptor.ApiLatencyInterceptor
 import java.util.UUID
 
 @ReactModule(name = AppMonitorModule.NAME)
@@ -15,6 +17,33 @@ class AppMonitorModule(reactContext: ReactApplicationContext) :
 
   override fun getName(): String {
     return NAME
+  }
+
+  override fun initialize(configApiUrl: String?, apiKey: String?, userId: String?) {
+    if (configApiUrl == null || apiKey == null || userId == null) return
+    appMonitor.initialize(configApiUrl, apiKey, userId)
+  }
+
+  override fun initializeWithConfig(config: ReadableMap?) {
+    if (config == null) return
+    
+    val configApiUrl = config.getString("configApiUrl")
+    val apiKey = config.getString("apiKey")
+    val userId = config.getString("userId")
+    val enableNetworkMonitoring = config.getBoolean("enableNetworkMonitoring")
+    
+    if (configApiUrl == null || apiKey == null || userId == null) return
+    
+    appMonitor.initialize(configApiUrl, apiKey, userId)
+    
+    // Setup network monitoring if enabled
+    if (enableNetworkMonitoring) {
+      NetworkingModule.setCustomClientBuilder { builder ->
+        builder.addInterceptor(
+          ApiLatencyInterceptor(true, reactApplicationContext)
+        )
+      }
+    }
   }
 
   override fun addMetric(metricName: String?, metricValue: Double) {
@@ -61,6 +90,10 @@ class AppMonitorModule(reactContext: ReactApplicationContext) :
   override fun generateNewSession(): String {
     appMonitor.generateNewSession()
     return appMonitor.sessionId
+  }
+
+  override fun getCurrentConfiguration(): String {
+    return appMonitor.getCurrentConfiguration()
   }
 
   private fun readableMapToStringMap(readableMap: ReadableMap?): Map<String, String> {
