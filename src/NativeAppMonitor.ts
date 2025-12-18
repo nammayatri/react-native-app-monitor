@@ -30,7 +30,7 @@ export interface Spec extends TurboModule {
   replaceUserId(userId: string): Promise<boolean>;
   resetUserId(): void;
   generateNewSession(): string;
-  getCurrentConfiguration(): Promise<string>;
+  getCurrentConfiguration(): string;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('AppMonitor');
