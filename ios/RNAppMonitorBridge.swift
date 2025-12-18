@@ -13,7 +13,7 @@ public class RNAppMonitorBridge: NSObject {
     
     @objc
     public func initialize(_ configApiUrl: String, apiKey: String, userId: String) {
-        sdk.initialize(configApiUrl: configApiUrl, apiKey: apiKey, userId: userId)
+        sdk.initialize(configApiUrl, apiKey: apiKey, userId: userId)
     }
     
     @objc
@@ -26,7 +26,7 @@ public class RNAppMonitorBridge: NSObject {
         
         let enableNetworkMonitoring = config["enableNetworkMonitoring"] as? Bool ?? false
         
-        sdk.initialize(configApiUrl: configApiUrl, apiKey: apiKey, userId: userId)
+        sdk.initialize(configApiUrl, apiKey: apiKey, userId: userId)
         
         // Setup network monitoring if enabled
         if enableNetworkMonitoring {
@@ -78,7 +78,12 @@ public class RNAppMonitorBridge: NSObject {
 
     @objc
     public func getCurrentConfiguration() -> String {
-        return sdk.getCurrentConfiguration()
+        let config = sdk.getCurrentConfiguration()
+        if let jsonData = try? JSONSerialization.data(withJSONObject: config, options: []),
+           let jsonString = String(data: jsonData, encoding: .utf8) {
+            return jsonString
+        }
+        return "{}"
     }
 }
 

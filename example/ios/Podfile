@@ -1,5 +1,9 @@
 ENV['RCT_NEW_ARCH_ENABLED'] = '1'
 
+# Add the private spec repo for AppMonitor SDK
+source 'https://github.com/nammayatri/ny-cocoapods-specs.git'
+source 'https://cdn.cocoapods.org/'
+
 # Resolve react_native_pods.rb with node to allow for hoisting
 require Pod::Executable.execute_command('node', ['-p',
   'require.resolve(
