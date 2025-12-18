@@ -18,6 +18,14 @@
     return self;
 }
 
+- (void)initialize:(NSString *)configApiUrl apiKey:(NSString *)apiKey userId:(NSString *)userId {
+    [_bridge initialize:configApiUrl apiKey:apiKey userId:userId];
+}
+
+- (void)initializeWithConfig:(NSDictionary *)config {
+    [_bridge initializeWithConfig:config];
+}
+
 - (void)addMetric:(NSString *)metricName metricValue:(double)metricValue {
     [_bridge addMetric:metricName value:@(metricValue)];
 }
@@ -57,6 +65,10 @@
 
 - (NSString *)generateNewSession {
     return [_bridge generateNewSession];
+}
+
+- (NSString *)getCurrentConfiguration {
+    return [_bridge getCurrentConfiguration];
 }
 
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:

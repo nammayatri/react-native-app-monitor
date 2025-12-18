@@ -12,7 +12,26 @@ export interface Labels {
   [key: string]: string;
 }
 
+export interface AppMonitorConfig {
+  configApiUrl: string;
+  apiKey: string;
+  userId: string;
+  enableNetworkMonitoring?: boolean;
+}
+
 export class AppMonitorAPI {
+  static initialize(
+    configApiUrl: string,
+    apiKey: string,
+    userId: string
+  ): void {
+    AppMonitor.initialize(configApiUrl, apiKey, userId);
+  }
+
+  static initializeWithConfig(config: AppMonitorConfig): void {
+    AppMonitor.initializeWithConfig(config);
+  }
+
   static addMetric(metricName: string, metricValue: number): void {
     AppMonitor.addMetric(metricName, metricValue);
   }

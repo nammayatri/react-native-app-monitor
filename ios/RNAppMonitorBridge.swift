@@ -12,6 +12,30 @@ public class RNAppMonitorBridge: NSObject {
     }
     
     @objc
+    public func initialize(_ configApiUrl: String, apiKey: String, userId: String) {
+        sdk.initialize(configApiUrl: configApiUrl, apiKey: apiKey, userId: userId)
+    }
+    
+    @objc
+    public func initializeWithConfig(_ config: NSDictionary) {
+        guard let configApiUrl = config["configApiUrl"] as? String,
+              let apiKey = config["apiKey"] as? String,
+              let userId = config["userId"] as? String else {
+            return
+        }
+        
+        let enableNetworkMonitoring = config["enableNetworkMonitoring"] as? Bool ?? false
+        
+        sdk.initialize(configApiUrl: configApiUrl, apiKey: apiKey, userId: userId)
+        
+        // Setup network monitoring if enabled
+        if enableNetworkMonitoring {
+            // sdk.setupNetworkMonitoring()
+            // TODO: Check for IOS
+        }
+    }
+    
+    @objc
     public func addMetric(_ metricName: String, value: NSNumber) {
         _ = sdk.addMetric(metricName, value: value)
     }
@@ -50,6 +74,11 @@ public class RNAppMonitorBridge: NSObject {
     public func generateNewSession() -> String {
         sdk.generateNewSession()
         return sdk.getSessionId()
+    }
+
+    @objc
+    public func getCurrentConfiguration() -> String {
+        return sdk.getCurrentConfiguration()
     }
 }
 
