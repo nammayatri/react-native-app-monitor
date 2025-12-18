@@ -29,7 +29,7 @@ Pod::Spec.new do |s|
   }
 
   # AppMonitor iOS SDK - from private spec repo
-  s.dependency "AppMonitor", "~> 1.0.0"
+  s.dependency "AppMonitor", "~> 1.0.1"
 
   # Use install_modules_dependencies if available (provided by react_native_pods.rb via Podfile)
   if defined?(install_modules_dependencies)
