@@ -1,3 +1,4 @@
+# Enable new architecture
 ENV['RCT_NEW_ARCH_ENABLED'] = '1'
 
 # Add the private spec repo for AppMonitor SDK
@@ -12,6 +13,7 @@ require Pod::Executable.execute_command('node', ['-p',
   )', __dir__]).strip
 
 platform :ios, min_ios_version_supported
+use_modular_headers!
 prepare_react_native_project!
 
 linkage = ENV['USE_FRAMEWORKS']
