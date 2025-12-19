@@ -10624,12 +10624,13 @@ __metadata:
     "@types/react": "npm:^19.1.0"
     react: "npm:19.1.0"
     react-native: "npm:0.81.1"
+    react-native-app-monitor: "npm:0.1.10"
     react-native-builder-bob: "npm:0.40.0"
     react-native-monorepo-config: "npm:^0.1.9"
   languageName: unknown
   linkType: soft
 
-"react-native-app-monitor@workspace:.":
+"react-native-app-monitor@npm:0.1.10, react-native-app-monitor@workspace:.":
   version: 0.0.0-use.local
   resolution: "react-native-app-monitor@workspace:."
   dependencies:
