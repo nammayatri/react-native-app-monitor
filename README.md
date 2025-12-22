@@ -44,16 +44,30 @@ Alternatively, you can use only the bundled code by ensuring the library is buil
 
 **Prerequisites**: This library requires access to the private CocoaPods spec repository where `AppMonitor ~> 1.0.0` is hosted.
 
-Add the private spec repository to your `Podfile`:
+The Podfile automatically detects and uses the working authentication method:
+- **Tries HTTPS first** (works with PAT, credential helper, or GitHub CLI)
+- **Falls back to SSH** if HTTPS fails
+- **No manual configuration needed** for most users
 
-```ruby
-source 'https://github.com/nammayatri/ny-cocoapods-specs.git'  # Private spec repo
-source 'https://cdn.cocoapods.org/'  # CocoaPods master
-```
+**For most users (zero steps needed):**
+- If you have GitHub CLI: Already configured, works automatically
+- If you use Git credential helper: Already configured, works automatically  
+- If you use SSH keys: Works automatically (fallback)
+
+**Optional one-time setup (only if automatic detection fails):**
+- HTTPS with PAT: `git config --global url."https://YOUR_PAT@github.com/".insteadOf "https://github.com/"`
+- Or use GitHub CLI: `gh auth setup-git`
 
 Then run:
 ```sh
 cd ios && pod install
+```
+
+**Note:** If you're using the example app, the Podfile is already configured. For your own app, you can use the same auto-detection logic or simply add:
+
+```ruby
+source 'https://github.com/nammayatri/ny-cocoapods-specs.git'
+source 'https://cdn.cocoapods.org/'
 ```
 
 ### Android Setup
