@@ -154,9 +154,13 @@ yarn release --npm.otp=<your-otp-code>
 *Note: The code expires quickly, so have your authenticator app ready.*
 
 **2. Using a Granular Access Token**
-If you use a token via the `NPM_TOKEN` environment variable or `.npmrc`, ensure it is a **Granular Access Token** with:
-- `Read and write` access to this package.
-- **"Bypass two-factor authentication for publishing"** enabled in the token settings on npmjs.com.
+If you prefer using a token (e.g., for automated environments or to bypass manual OTP entries), ensure you use a **Granular Access Token** with "Bypass 2FA" enabled.
+
+To ensure `npm` uses your token instead of the session from `npm login`, create a temporary local `.npmrc` file:
+```sh
+echo "//registry.npmjs.org/:_authToken=<your-granular-token>" > .npmrc
+```
+**Important**: Delete this file once the release is complete.
 
 #### Manual Publishing (if needed)
 
