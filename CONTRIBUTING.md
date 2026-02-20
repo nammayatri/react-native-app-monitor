@@ -142,6 +142,22 @@ The library uses [react-native-builder-bob](https://github.com/callstack/react-n
 - **Output**: `lib/` directory (compiled JavaScript + type definitions)
 - **Note**: `lib/` is in `.gitignore` and not committed to git. It's only included in the npm package.
 
+#### Troubleshooting 403 Forbidden (2FA)
+
+If you encounter a `403 Forbidden` error during publishing, it's likely due to npm's Two-Factor Authentication (2FA) requirement.
+
+**1. Using an OTP (One-Time Password)**
+You can provide an OTP code directly to the release command:
+```sh
+yarn release --npm.otp=<your-otp-code>
+```
+*Note: The code expires quickly, so have your authenticator app ready.*
+
+**2. Using a Granular Access Token**
+If you use a token via the `NPM_TOKEN` environment variable or `.npmrc`, ensure it is a **Granular Access Token** with:
+- `Read and write` access to this package.
+- **"Bypass two-factor authentication for publishing"** enabled in the token settings on npmjs.com.
+
 #### Manual Publishing (if needed)
 
 If you need to publish manually without using release-it:
