@@ -6258,13 +6258,13 @@ __metadata:
   linkType: hard
 
 "fast-xml-parser@npm:^4.4.1":
-  version: 4.5.3
-  resolution: "fast-xml-parser@npm:4.5.3"
+  version: 4.5.4
+  resolution: "fast-xml-parser@npm:4.5.4"
   dependencies:
-    strnum: "npm:^1.1.1"
+    strnum: "npm:^1.0.5"
   bin:
     fxparser: src/cli/cli.js
-  checksum: 10c0/bf9ccadacfadc95f6e3f0e7882a380a7f219cf0a6f96575149f02cb62bf44c3b7f0daee75b8ff3847bcfd7fbcb201e402c71045936c265cf6d94b141ec4e9327
+  checksum: 10c0/7989148650fc1fce988798b62467f7dee0fd5a7ad049373e00e65fbc68f689c119975d03da32c427f0a1f5aad01de2efbd783a48dcdaf3ca41817a8b161ad3e8
   languageName: node
   linkType: hard
 
@@ -10630,7 +10630,22 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"react-native-app-monitor@npm:0.1.10, react-native-app-monitor@workspace:.":
+"react-native-app-monitor@npm:0.1.10":
+  version: 0.1.10
+  resolution: "react-native-app-monitor@npm:0.1.10"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  peerDependenciesMeta:
+    react:
+      optional: false
+    react-native:
+      optional: false
+  checksum: 10c0/8edd1fd9c5bc7259e0478237f4110cd043316eae034b405d6af70312b8bb10334871b800775f9cd3bd6108c86b94080834df30167020b691561fa90127a2649e
+  languageName: node
+  linkType: hard
+
+"react-native-app-monitor@workspace:.":
   version: 0.0.0-use.local
   resolution: "react-native-app-monitor@workspace:."
   dependencies:
@@ -11786,7 +11801,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"strnum@npm:^1.1.1":
+"strnum@npm:^1.0.5":
   version: 1.1.2
   resolution: "strnum@npm:1.1.2"
   checksum: 10c0/a0fce2498fa3c64ce64a40dada41beb91cabe3caefa910e467dc0518ef2ebd7e4d10f8c2202a6104f1410254cae245066c0e94e2521fb4061a5cb41831952392
