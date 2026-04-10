@@ -10630,7 +10630,22 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"react-native-app-monitor@npm:0.1.10, react-native-app-monitor@workspace:.":
+"react-native-app-monitor@npm:0.1.10":
+  version: 0.1.10
+  resolution: "react-native-app-monitor@npm:0.1.10"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  peerDependenciesMeta:
+    react:
+      optional: false
+    react-native:
+      optional: false
+  checksum: 10c0/8edd1fd9c5bc7259e0478237f4110cd043316eae034b405d6af70312b8bb10334871b800775f9cd3bd6108c86b94080834df30167020b691561fa90127a2649e
+  languageName: node
+  linkType: hard
+
+"react-native-app-monitor@workspace:.":
   version: 0.0.0-use.local
   resolution: "react-native-app-monitor@workspace:."
   dependencies:
