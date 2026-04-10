@@ -8,7 +8,6 @@ export interface Spec extends TurboModule {
     userId: string;
     enableNetworkMonitoring?: boolean;
   }): void;
-  addMetric(metricName: string, metricValue: number): void;
   addEvent(
     eventType: string,
     eventName: string,

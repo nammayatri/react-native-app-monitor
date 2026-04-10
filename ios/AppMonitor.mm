@@ -26,10 +26,6 @@
     [_bridge initializeWithConfig:config];
 }
 
-- (void)addMetric:(NSString *)metricName metricValue:(double)metricValue {
-    [_bridge addMetric:metricName value:@(metricValue)];
-}
-
 - (void)addEvent:(NSString *)eventType
        eventName:(NSString *)eventName
     eventPayload:(NSDictionary *)eventPayload {

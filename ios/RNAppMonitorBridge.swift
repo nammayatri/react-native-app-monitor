@@ -36,11 +36,6 @@ public class RNAppMonitorBridge: NSObject {
     }
     
     @objc
-    public func addMetric(_ metricName: String, value: NSNumber) {
-        _ = sdk.addMetric(metricName, value: value)
-    }
-    
-    @objc
     public func addEvent(_ eventType: String, eventName: String, eventPayload: NSDictionary) {
         let payload = eventPayload as? [String: Any] ?? [:]
         _ = sdk.addEvent(eventType, eventName: eventName, eventPayload: payload)

@@ -79,9 +79,6 @@ The Android SDK will be automatically resolved once the repository is configured
 ```js
 import AppMonitor from 'react-native-app-monitor';
 
-// Add a metric
-AppMonitor.addMetric('response_time', 150.5);
-
 // Add an event
 AppMonitor.addEvent('user_action', 'button_click', {
   buttonId: 'submit',

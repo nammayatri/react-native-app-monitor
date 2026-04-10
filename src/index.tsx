@@ -32,10 +32,6 @@ export class AppMonitorAPI {
     AppMonitor.initializeWithConfig(config);
   }
 
-  static addMetric(metricName: string, metricValue: number): void {
-    AppMonitor.addMetric(metricName, metricValue);
-  }
-
   static addEvent(
     eventType: string,
     eventName: string,

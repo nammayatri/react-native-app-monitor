@@ -46,10 +46,6 @@ class AppMonitorModule(reactContext: ReactApplicationContext) :
     }
   }
 
-  override fun addMetric(metricName: String?, metricValue: Double) {
-    appMonitor.addMetric(metricName, metricValue)
-  }
-
   override fun addEvent(
     eventType: String?,
     eventName: String?,
