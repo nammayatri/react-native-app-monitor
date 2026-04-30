@@ -62,7 +62,7 @@ public class RNAppMonitorBridge: NSObject {
     
     @objc
     public func resetUserId() {
-        sdk.generateNewSession()
+        sdk.setUserId(UUID().uuidString)
     }
     
     @objc
