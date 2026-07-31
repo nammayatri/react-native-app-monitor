@@ -56,8 +56,11 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Upgrade npm (Trusted Publishing needs npm >= 11.5.1)
+        # Pinned to the 11.x line on purpose: npm@latest is now 12.x, which
+        # requires Node ^22.22.2 || ^24.15.0 || >=26 and fails EBADENGINE on the
+        # Node version pinned in .nvmrc. Bump this once .nvmrc moves past 22.22.2.
         run: |
-          npm install -g npm@latest
+          npm install -g npm@^11
           echo "npm version: $(npm --version)"
 
       - name: Set package version
