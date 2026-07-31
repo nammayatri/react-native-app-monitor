@@ -1,0 +1,125 @@
+name: Publish to npm
+
+# Manual publish of react-native-app-monitor to npm using npm Trusted Publishing
+# (OIDC). No NPM_TOKEN is used or needed — npm exchanges the workflow's OIDC
+# identity for a short-lived publish credential and attaches provenance
+# automatically. The package's Trusted Publisher on npmjs.com must be configured
+# to point at this repo + this workflow file (see the notes at the bottom).
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'npm package version to publish (e.g. 1.0.22). Leave blank to publish the version currently in package.json.'
+        required: false
+        type: string
+      android_sdk_version:
+        description: 'Android AppMonitor SDK (AAR) version to pin in android/build.gradle (com.movingtech:appmonitor). Leave blank to keep the current pin.'
+        required: false
+        type: string
+      ios_sdk_version:
+        description: 'iOS AppMonitor SDK version to pin in RNAppMonitor.podspec (AppMonitor pod dependency). Leave blank to keep the current pin.'
+        required: false
+        type: string
+      npm_tag:
+        description: 'npm dist-tag to publish under.'
+        required: false
+        default: 'latest'
+        type: choice
+        options:
+          - latest
+          - beta
+          - next
+      dry_run:
+        description: 'Run everything (build + npm publish --dry-run) without actually publishing or pushing.'
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write   # required for npm Trusted Publishing (OIDC)
+      contents: write   # required to push the version-bump commit + tag
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Setup Node.js and install dependencies
+        uses: ./.github/actions/setup
+
+      - name: Upgrade npm (Trusted Publishing needs npm >= 11.5.1)
+        run: |
+          npm install -g npm@latest
+          echo "npm version: $(npm --version)"
+
+      - name: Set package version
+        if: ${{ inputs.version != '' }}
+        run: |
+          echo "Setting package.json version to ${{ inputs.version }}"
+          npm version "${{ inputs.version }}" --no-git-tag-version --allow-same-version
+
+      - name: Pin Android AppMonitor SDK version
+        if: ${{ inputs.android_sdk_version != '' }}
+        env:
+          ANDROID_SDK_VERSION: ${{ inputs.android_sdk_version }}
+        run: |
+          echo "Pinning com.movingtech:appmonitor to ${ANDROID_SDK_VERSION}"
+          sed -i -E "s#(com\.movingtech:appmonitor:)[^@\"]+(@aar)#\1${ANDROID_SDK_VERSION}\2#" android/build.gradle
+          echo "Resulting line:"
+          grep -n "com.movingtech:appmonitor" android/build.gradle
+
+      - name: Pin iOS AppMonitor SDK version
+        if: ${{ inputs.ios_sdk_version != '' }}
+        env:
+          IOS_SDK_VERSION: ${{ inputs.ios_sdk_version }}
+        run: |
+          echo "Pinning AppMonitor pod to ${IOS_SDK_VERSION}"
+          sed -i -E "s#(s\.dependency \"AppMonitor\", \")[^\"]+(\")#\1${IOS_SDK_VERSION}\2#" RNAppMonitor.podspec
+          echo "Resulting line:"
+          grep -n "s.dependency \"AppMonitor\"" RNAppMonitor.podspec
+
+      - name: Resolve version being published
+        id: meta
+        run: |
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          echo "version=${PKG_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "Publishing react-native-app-monitor@${PKG_VERSION} (tag: ${{ inputs.npm_tag }}, dry_run: ${{ inputs.dry_run }})"
+
+      - name: Build package
+        run: yarn build
+
+      - name: Publish to npm (dry run)
+        if: ${{ inputs.dry_run }}
+        run: npm publish --provenance --access public --tag "${{ inputs.npm_tag }}" --ignore-scripts --dry-run
+
+      - name: Publish to npm
+        if: ${{ !inputs.dry_run }}
+        run: npm publish --provenance --access public --tag "${{ inputs.npm_tag }}" --ignore-scripts
+
+      - name: Commit version bump and tag
+        if: ${{ !inputs.dry_run }}
+        run: |
+          VERSION="${{ steps.meta.outputs.version }}"
+
+          # Nothing changed if no version/pin inputs were provided — skip the commit in that case.
+          if git diff --quiet -- package.json android/build.gradle RNAppMonitor.podspec; then
+            echo "No file changes to commit (published existing version)."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add package.json android/build.gradle RNAppMonitor.podspec
+            git commit -m "chore: release ${VERSION}"
+            git push origin HEAD:${{ github.ref_name }}
+          fi
+
+          # Tag the release (idempotent-ish: fails loudly if the tag already exists).
+          git tag "v${VERSION}"
+          git push origin "v${VERSION}"
