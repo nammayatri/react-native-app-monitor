@@ -1,4 +1,8 @@
-import { TurboModuleRegistry, type TurboModule } from 'react-native';
+import {
+  TurboModuleRegistry,
+  type TurboModule,
+  type CodegenTypes,
+} from 'react-native';
 
 export interface Spec extends TurboModule {
   initialize(configApiUrl: string, apiKey: string, userId: string): void;
@@ -11,13 +15,11 @@ export interface Spec extends TurboModule {
   addEvent(
     eventType: string,
     eventName: string,
-    eventPayload: {
-      [key: string]:
-        | string
-        | number
-        | boolean
-        | { [key: string]: string | number | boolean };
-    }
+    // RN 0.86 codegen rejects an object literal nested inside a union (TSTypeLiteral
+    // in emitUnion), so the previous inline payload type fails to build. The native
+    // implementations accept ReadableMap / NSDictionary, so UnsafeObject is the
+    // faithful spec type; callers should validate/sanitise payloads before this call.
+    eventPayload: CodegenTypes.UnsafeObject
   ): void;
   addLog(
     logLevel: string,
