@@ -1,4 +1,8 @@
-import { TurboModuleRegistry, type TurboModule } from 'react-native';
+import {
+  TurboModuleRegistry,
+  type CodegenTypes,
+  type TurboModule,
+} from 'react-native';
 
 export interface Spec extends TurboModule {
   initialize(configApiUrl: string, apiKey: string, userId: string): void;
@@ -11,13 +15,7 @@ export interface Spec extends TurboModule {
   addEvent(
     eventType: string,
     eventName: string,
-    eventPayload: {
-      [key: string]:
-        | string
-        | number
-        | boolean
-        | { [key: string]: string | number | boolean };
-    }
+    eventPayload: CodegenTypes.UnsafeObject
   ): void;
   addLog(
     logLevel: string,
