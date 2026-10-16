@@ -1,8 +1,12 @@
 # Enable new architecture
 ENV['RCT_NEW_ARCH_ENABLED'] = '1'
 
+# Load CocoaPods helpers for auto-detecting authentication method
+require_relative '../../scripts/cocoapods_helpers.rb'
+
 # Add the private spec repo for AppMonitor SDK
-source 'https://github.com/nammayatri/ny-cocoapods-specs.git'
+# Auto-detects working authentication method (HTTPS or SSH)
+source get_cocoapods_spec_repo_url
 source 'https://cdn.cocoapods.org/'
 
 # Resolve react_native_pods.rb with node to allow for hoisting
